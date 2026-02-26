@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>语文互动学习 | 闯关练习</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">语</span>
+      <div>
+        <h1>语文互动学习</h1>
+        <p class="subtitle">闯关练习 · 即时反馈 · 适合课堂/家庭练</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="tab active" data-mode="quiz">选择题闯关</button>
+      <button class="tab" data-mode="review">错题本</button>
+      <button class="tab" data-mode="about">使用说明</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- 选择题闯关 -->
+    <section id="panel-quiz" class="panel">
+      <div class="card">
+        <div class="row space-between">
+          <div class="meta">
+            <div class="badge" id="gradeBadge">一年级</div>
+            <div class="badge ghost" id="unitBadge">识字与词语</div>
+          </div>
+
+          <div class="score">
+            <span>得分：</span>
+            <strong id="scoreText">0</strong>
+            <span class="muted">/</span>
+            <span id="totalText">0</span>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="question">
+          <div class="q-index" id="qIndex">第 1 题</div>
+          <h2 class="q-title" id="qTitle">题目加载中…</h2>
+          <p class="q-desc" id="qDesc"></p>
+        </div>
+
+        <div class="options" id="options"></div>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+
+        <div class="row space-between actions">
+          <button class="btn secondary" id="btnPrev" disabled>上一题</button>
+          <div class="row gap">
+            <button class="btn" id="btnReset">重新开始</button>
+            <button class="btn primary" id="btnNext" disabled>下一题</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 错题本 -->
+    <section id="panel-review" class="panel hidden">
+      <div class="card">
+        <h2>错题本</h2>
+        <p class="muted">你做错的题会自动记录在本机浏览器中（不联网）。</p>
+        <div id="wrongList" class="wrong-list"></div>
+        <div class="row space-between actions">
+          <button class="btn secondary" id="btnClearWrong">清空错题</button>
+          <button class="btn primary" id="btnPracticeWrong">只练错题</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 使用说明 -->
+    <section id="panel-about" class="panel hidden">
+      <div class="card">
+        <h2>使用说明（老师版）</h2>
+        <ol class="help">
+          <li>要改题：打开 <code>app.js</code>，找到 <code>QUESTION_BANK</code>，按示例增删题目即可。</li>
+          <li>要改年级/单元：改 <code>grade</code> / <code>unit</code> 字段。</li>
+          <li>要新增题型：可以下一步让我帮你加“拖拽配对 / 填空 / 组词造句”。</li>
+          <li>上线：把 3 个文件上传到 GitHub → Settings → Pages → 选择分支发布。</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="muted">© 语文互动学习 · 可用于教学演示（本地存储错题）</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
