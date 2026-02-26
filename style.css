@@ -28,45 +28,26 @@ body{
     var(--bg);
 }
 
-.topbar{
-  max-width:1100px;
-  margin:0 auto;
-  padding:16px 16px 0;
-}
-
+.topbar{max-width:1100px;margin:0 auto;padding:16px 16px 0;}
 .brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  padding:14px 16px;
-  background: var(--card);
-  border:1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
+  display:flex;gap:12px;align-items:center;
+  padding:14px 16px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);backdrop-filter: blur(10px);
 }
-
 .mark{
-  width:44px;height:44px;
-  display:grid;place-items:center;
-  border-radius: 14px;
-  font-weight:900;
+  width:44px;height:44px;display:grid;place-items:center;
+  border-radius: 14px;font-weight:900;
   background: linear-gradient(135deg, var(--mint), var(--lav));
 }
-
 .brandText h1{margin:0;font-size:18px}
 .brandText .sub{margin:2px 0 0;color:var(--muted);font-size:12px}
 
-.nav{
-  margin-top:12px;
-  display:flex; gap:10px; flex-wrap:wrap;
-}
+.nav{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
 .navBtn{
   border:1px solid var(--line);
   background: rgba(255,255,255,.65);
-  padding:10px 12px;
-  border-radius:999px;
-  cursor:pointer;
+  padding:10px 12px;border-radius:999px;cursor:pointer;
 }
 .navBtn.active{
   border-color: rgba(111,124,255,.35);
@@ -95,29 +76,19 @@ body{
 .nameRow{
   display:grid;
   grid-template-columns: 90px 1fr auto;
-  gap:10px;
-  align-items:center;
-  margin-top:12px;
+  gap:10px;align-items:center;margin-top:12px;
 }
-@media (max-width:640px){
-  .nameRow{grid-template-columns:1fr; }
-}
+@media (max-width:640px){ .nameRow{grid-template-columns:1fr;} }
 .label{font-size:13px;color:var(--muted)}
 .input{
-  padding:12px 12px;
-  border-radius: 14px;
-  border:1px solid var(--line);
-  outline:none;
-  background: rgba(255,255,255,.85);
-  font-size:15px;
+  padding:12px 12px;border-radius:14px;border:1px solid var(--line);
+  outline:none;background: rgba(255,255,255,.85);font-size:15px;
 }
 
 .btn{
   border:1px solid var(--line);
   background: rgba(255,255,255,.7);
-  padding:10px 12px;
-  border-radius: 14px;
-  cursor:pointer;
+  padding:10px 12px;border-radius: 14px;cursor:pointer;
 }
 .btn.primary{
   border-color: rgba(111,124,255,.35);
@@ -128,45 +99,26 @@ body{
 .pill{
   border:1px solid var(--line);
   background: rgba(255,255,255,.65);
-  padding:8px 10px;
-  border-radius: 999px;
-  font-size:13px;
+  padding:8px 10px;border-radius: 999px;font-size:13px;
 }
 
 .flowers{
-  display:grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
-  gap:14px;
-  margin-top:10px;
+  display:grid;grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:14px;margin-top:10px;
 }
 .flower{
-  height:140px;
-  border-radius: 28px;
-  border:1px solid var(--line);
-  cursor:pointer;
-  font-size:18px;
-  font-weight:800;
-  letter-spacing:1px;
-  position:relative;
-  overflow:hidden;
+  height:140px;border-radius: 28px;border:1px solid var(--line);
+  cursor:pointer;font-size:18px;font-weight:800;letter-spacing:1px;
+  position:relative;overflow:hidden;background: rgba(255,255,255,.75);
 }
 .flower::before{
-  content:"";
-  position:absolute; inset:-40px;
-  border-radius: 50%;
-  opacity:.7;
-  filter: blur(0px);
-  transform: rotate(12deg);
+  content:"";position:absolute; inset:-40px;border-radius: 50%;
+  opacity:.7;transform: rotate(12deg);
 }
-.f1{background: rgba(255,255,255,.75)}
 .f1::before{background: radial-gradient(circle at 30% 30%, var(--pink), transparent 60%)}
-.f2{background: rgba(255,255,255,.75)}
 .f2::before{background: radial-gradient(circle at 30% 30%, var(--mint), transparent 60%)}
-.f3{background: rgba(255,255,255,.75)}
 .f3::before{background: radial-gradient(circle at 30% 30%, var(--lemon), transparent 60%)}
-.f4{background: rgba(255,255,255,.75)}
 .f4::before{background: radial-gradient(circle at 30% 30%, var(--lav), transparent 60%)}
-
 .hint{margin-top:10px}
 
 .row{display:flex;align-items:center}
@@ -174,11 +126,8 @@ body{
 .gap{gap:10px;flex-wrap:wrap}
 
 .badge{
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.65);
-  font-size:12px;
+  padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+  background: rgba(255,255,255,.65);font-size:12px;
 }
 .badge.soft{background: rgba(255,255,255,.45)}
 .leftMeta{display:flex;gap:10px;flex-wrap:wrap}
@@ -186,21 +135,15 @@ body{
 .scoreBox{
   border:1px solid var(--line);
   background: rgba(255,255,255,.65);
-  padding:6px 10px;
-  border-radius: 999px;
+  padding:6px 10px;border-radius: 999px;
 }
 
 .progress{
-  height:10px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.55);
-  overflow:hidden;
-  margin:14px 0;
+  height:10px;border-radius:999px;border:1px solid var(--line);
+  background: rgba(255,255,255,.55);overflow:hidden;margin:14px 0;
 }
 .bar{
-  height:100%;
-  width:0%;
+  height:100%;width:0%;
   background: linear-gradient(90deg, rgba(255,211,230,.9), rgba(111,124,255,.55), rgba(201,243,234,.9));
 }
 
@@ -209,12 +152,8 @@ body{
 .qDesc{margin:0 0 10px}
 
 .feedback{
-  margin-top:12px;
-  min-height: 22px;
-  font-size:14px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px dashed transparent;
+  margin-top:12px;min-height: 22px;font-size:14px;
+  padding:10px 12px;border-radius:14px;border:1px dashed transparent;
 }
 .feedback.ok{background: rgba(201,243,234,.55); border-color: rgba(43,43,58,.12)}
 .feedback.bad{background: rgba(255,211,230,.55); border-color: rgba(43,43,58,.12)}
@@ -230,13 +169,88 @@ body{
   font-size:12px;
 }
 
-.footer{
-  max-width:1100px;
-  margin:0 auto 20px;
-  padding:0 16px;
-}
+.footer{max-width:1100px;margin:0 auto 20px;padding:0 16px}
 
-/* 题型 UI */
+/* ===== 选择单元 / 课文 ===== */
+.unitGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:12px;
+}
+@media (max-width:900px){ .unitGrid{grid-template-columns: repeat(2, minmax(0,1fr));} }
+.unitCard{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.75);
+  border-radius: 22px;
+  padding:14px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  min-height: 96px;
+}
+.unitCard::before{
+  content:"";
+  position:absolute; inset:-30px;
+  border-radius: 50%;
+  opacity:.8;
+}
+.unitCard .t{font-weight:900;font-size:18px}
+.unitCard .s{margin-top:6px;color:var(--muted);font-size:12px}
+.uc1::before{background: radial-gradient(circle at 25% 25%, var(--pink), transparent 60%)}
+.uc2::before{background: radial-gradient(circle at 25% 25%, var(--mint), transparent 60%)}
+.uc3::before{background: radial-gradient(circle at 25% 25%, var(--lemon), transparent 60%)}
+.uc4::before{background: radial-gradient(circle at 25% 25%, var(--lav), transparent 60%)}
+
+.lessonGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:760px){ .lessonGrid{grid-template-columns:1fr} }
+
+.lessonCard{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.75);
+  border-radius: 18px;
+  padding:14px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+.lessonCard::before{
+  content:"";
+  position:absolute; inset:-40px;
+  border-radius: 50%;
+  opacity:.65;
+}
+.lc1::before{background: radial-gradient(circle at 25% 25%, var(--pink), transparent 60%)}
+.lc2::before{background: radial-gradient(circle at 25% 25%, var(--mint), transparent 60%)}
+.lc3::before{background: radial-gradient(circle at 25% 25%, var(--lemon), transparent 60%)}
+.lc4::before{background: radial-gradient(circle at 25% 25%, var(--lav), transparent 60%)}
+.lessonCard .t{font-weight:900;font-size:16px}
+.lessonCard .s{margin-top:6px;color:var(--muted);font-size:12px}
+
+/* ===== 榜单 ===== */
+.boardGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1fr 2fr;
+  gap:12px;
+}
+@media (max-width:900px){ .boardGrid{grid-template-columns:1fr} }
+.boardCard{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.75);
+  border-radius: 18px;
+  padding:14px;
+}
+.boardTitle{font-weight:900;margin-bottom:8px}
+.champ{font-size:22px;font-weight:900}
+.boardList{display:flex;flex-direction:column;gap:10px}
+
+/* ===== 题型 UI ===== */
 .mcqGrid{
   display:grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
@@ -255,30 +269,43 @@ body{
 .opt.bad{outline: 2px solid rgba(255,120,160,.45)}
 .opt[disabled]{opacity:.7;cursor:not-allowed}
 
-.matchWrap{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:12px;
-}
-@media (max-width:720px){ .matchWrap{grid-template-columns:1fr} }
-.matchCol{border:1px solid var(--line);background:rgba(255,255,255,.6);border-radius:14px;padding:12px}
-.matchItem{
-  padding:10px 10px;
+.matchOneWrap{
   border:1px solid var(--line);
-  background: rgba(255,255,255,.8);
-  border-radius:12px;
-  margin:8px 0;
+  background: rgba(255,255,255,.65);
+  border-radius: 16px;
+  padding:12px;
 }
-.draggable{cursor:grab}
-.dropzone{
-  min-height:46px;
+.blankZone{
+  margin-top:10px;
+  border:2px dashed rgba(43,43,58,.18);
+  background: rgba(255,255,255,.75);
+  border-radius: 14px;
+  padding:14px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   gap:10px;
 }
-.dropHint{color:var(--muted);font-size:12px}
-.dropFilled{font-weight:700}
+.blankText{font-weight:900}
+.blankHint{color:var(--muted);font-size:12px}
+.choiceRow{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.chip{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.85);
+  border-radius: 999px;
+  padding:10px 12px;
+  cursor:pointer;
+  font-weight:800;
+}
+.chip.selected{
+  outline: 2px solid rgba(111,124,255,.35);
+}
+.chip.draggable{cursor:grab}
 
 .fillRow{
   display:flex;
@@ -294,4 +321,12 @@ body{
   border:1px solid var(--line);
   background: rgba(255,255,255,.85);
   font-size:15px;
+}
+
+.blockQuote{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.72);
+  border-radius: 14px;
+  padding:12px;
+  line-height:1.8;
 }
