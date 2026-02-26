@@ -171,7 +171,7 @@ body{
 
 .footer{max-width:1100px;margin:0 auto 20px;padding:0 16px}
 
-/* ===== 选择单元 / 课文 ===== */
+/* ===== 单元 / 课文 ===== */
 .unitGrid{
   margin-top:14px;
   display:grid;
@@ -250,7 +250,7 @@ body{
 .champ{font-size:22px;font-weight:900}
 .boardList{display:flex;flex-direction:column;gap:10px}
 
-/* ===== 题型 UI ===== */
+/* ===== 题型：选择题 ===== */
 .mcqGrid{
   display:grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
@@ -269,64 +269,4 @@ body{
 .opt.bad{outline: 2px solid rgba(255,120,160,.45)}
 .opt[disabled]{opacity:.7;cursor:not-allowed}
 
-.matchOneWrap{
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.65);
-  border-radius: 16px;
-  padding:12px;
-}
-.blankZone{
-  margin-top:10px;
-  border:2px dashed rgba(43,43,58,.18);
-  background: rgba(255,255,255,.75);
-  border-radius: 14px;
-  padding:14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-.blankText{font-weight:900}
-.blankHint{color:var(--muted);font-size:12px}
-.choiceRow{
-  margin-top:12px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-.chip{
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.85);
-  border-radius: 999px;
-  padding:10px 12px;
-  cursor:pointer;
-  font-weight:800;
-}
-.chip.selected{
-  outline: 2px solid rgba(111,124,255,.35);
-}
-.chip.draggable{cursor:grab}
-
-.fillRow{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  margin-top:10px;
-}
-.fillInput{
-  flex: 1 1 220px;
-  padding:12px 12px;
-  border-radius:14px;
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.85);
-  font-size:15px;
-}
-
-.blockQuote{
-  border:1px solid var(--line);
-  background: rgba(255,255,255,.72);
-  border-radius: 14px;
-  padding:12px;
-  line-height:1.8;
-}
+.help li{margin:10px 0}
