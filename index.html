@@ -19,7 +19,6 @@
     <nav class="nav">
       <button class="navBtn active" data-view="home">首页</button>
       <button class="navBtn" data-view="board">今日榜单</button>
-      <button class="navBtn" data-view="teacher">教师设置</button>
     </nav>
   </header>
 
@@ -40,10 +39,6 @@
           <div class="miniStats">
             <div class="pill">当前姓名：<strong id="nameText">未填写</strong></div>
             <div class="pill">今日积分：<strong id="todayScoreText">0</strong></div>
-          </div>
-
-          <div class="muted tiny">
-            全班同榜说明：需要教师先在“教师设置”里配置一个 Google 表格接口（5分钟搞定）。
           </div>
         </div>
 
@@ -79,7 +74,9 @@
         <div class="row space">
           <div>
             <h2>选择课文</h2>
-            <p class="muted">板块：<strong id="lessonTopicText">—</strong>　|　单元：<strong id="lessonUnitText">—</strong>　|　姓名：<strong id="lessonNameText">—</strong></p>
+            <p class="muted">
+              板块：<strong id="lessonTopicText">—</strong>　|　单元：<strong id="lessonUnitText">—</strong>　|　姓名：<strong id="lessonNameText">—</strong>
+            </p>
           </div>
           <div class="row gap">
             <button class="btn" id="btnBackUnit">返回单元</button>
@@ -88,8 +85,9 @@
         </div>
 
         <div class="lessonGrid" id="lessonGrid"></div>
+
         <div class="muted tiny">
-          说明：若课文显示“暂无题库”，你把题库发我即可继续补充。
+          说明：若课文显示“暂无题库”，把题库发我即可继续补充。
         </div>
       </div>
     </section>
@@ -130,7 +128,7 @@
           </div>
 
           <div class="muted tiny">
-            规则：做错必须重做；答对才解锁“下一题”。答对会自动提交到“全班同榜”（若已配置）。
+            规则：做错必须重做；答对才解锁“下一题”。答对自动记入“今日榜单（全班同榜）”。
           </div>
         </div>
       </div>
@@ -142,21 +140,27 @@
         <div class="row space">
           <div>
             <h2>今日榜单 🏆</h2>
-            <p class="muted">
-              若教师已配置 Google 表格接口：这里显示“全班同榜”。否则退化为“本机榜单”。
-            </p>
+            <p class="muted">前三名领奖台 + 金色小皇冠。点击“刷新榜单”即可更新全班排名。</p>
           </div>
           <div class="row gap">
             <button class="btn" id="btnRefreshBoard">刷新榜单</button>
-            <button class="btn" id="btnClearLocal">清空本机榜单</button>
           </div>
         </div>
 
+        <!-- 领奖台 -->
+        <div class="podiumWrap">
+          <div class="podiumGrid" id="podiumGrid">
+            <!-- JS 填充 -->
+          </div>
+        </div>
+
+        <!-- 完整榜单 -->
         <div class="boardGrid">
           <div class="boardCard">
-            <div class="boardTitle">今天语文小状元</div>
+            <div class="boardTitle">语文小状元</div>
             <div class="champ" id="champText">—</div>
             <div class="muted tiny" id="champSub">—</div>
+            <div class="muted tiny" id="boardStatus">—</div>
           </div>
 
           <div class="boardCard">
@@ -164,100 +168,8 @@
             <div id="boardList" class="boardList"></div>
           </div>
         </div>
-
-        <div class="muted tiny" id="boardStatus">—</div>
       </div>
     </section>
-
-    <!-- 教师设置 -->
-    <section id="view-teacher" class="view hidden">
-      <div class="card">
-        <h2>教师设置：开启“全班同榜”（推荐：Google 表格，5分钟）</h2>
-
-        <ol class="help">
-          <li>打开 Google Drive → 新建一个表格（例如：<strong>语文小状元积分</strong>）。</li>
-          <li>表格里随便留空即可，数据会自动写入。</li>
-          <li>在表格里：扩展程序 → Apps Script，创建脚本，粘贴下方代码。</li>
-          <li>部署 → 新建部署 → 类型选择“Web 应用”：
-            <ul>
-              <li>执行身份：我（脚本所有者）</li>
-              <li>访问权限：任何人</li>
-            </ul>
-            得到一个 <strong>Web App URL</strong>。
-          </li>
-          <li>把 URL 粘贴到 <code>app.js</code> 里 <code>REMOTE_LEADERBOARD_URL</code> 变量即可。</li>
-        </ol>
-
-        <h3>Apps Script 代码（复制粘贴即可）</h3>
-        <pre class="codeBlock"><code>function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("scores") || ss.insertSheet("scores");
-  var data = JSON.parse(e.postData.contents || "{}");
-
-  // data: { date:"YYYY-MM-DD", name:"小明", delta:1 }
-  var date = data.date || "";
-  var name = data.name || "";
-  var delta = Number(data.delta || 0);
-
-  if (!date || !name || !delta) {
-    return ContentService.createTextOutput(JSON.stringify({ ok:false, error:"bad params" }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-
-  // 表头
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["date", "name", "score"]);
-  }
-
-  // 查找同一天同名
-  var values = sheet.getDataRange().getValues();
-  var row = -1;
-  for (var i = 1; i < values.length; i++) {
-    if (values[i][0] === date && values[i][1] === name) {
-      row = i + 1; // 1-based
-      break;
-    }
-  }
-
-  if (row === -1) {
-    sheet.appendRow([date, name, delta]);
-  } else {
-    var current = Number(sheet.getRange(row, 3).getValue() || 0);
-    sheet.getRange(row, 3).setValue(current + delta);
-  }
-
-  return ContentService.createTextOutput(JSON.stringify({ ok:true }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doGet(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("scores");
-  var date = (e.parameter && e.parameter.date) ? e.parameter.date : "";
-
-  if (!sheet || !date) {
-    return ContentService.createTextOutput(JSON.stringify({ ok:false, entries:[] }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-
-  var values = sheet.getDataRange().getValues();
-  var entries = [];
-  for (var i = 1; i < values.length; i++) {
-    if (values[i][0] === date) {
-      entries.push({ name: values[i][1], score: Number(values[i][2] || 0) });
-    }
-  }
-  entries.sort(function(a,b){ return b.score - a.score; });
-  return ContentService.createTextOutput(JSON.stringify({ ok:true, entries:entries }))
-    .setMimeType(ContentService.MimeType.JSON);
-}</code></pre>
-
-        <p class="muted tiny">
-          配置好后，全班同学在不同设备上答题，榜单会自动汇总到同一个 Google 表格里。
-        </p>
-      </div>
-    </section>
-
   </main>
 
   <footer class="footer muted">© 我是语文小状元 · 二年级语文闯关</footer>
