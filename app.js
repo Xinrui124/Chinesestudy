@@ -2,8 +2,11 @@
  * 我是语文小状元 - 二年级闯关（纯前端）
  * 流程：板块 → 单元 → 课文 → 闯关
  * 规则：做完立刻反馈；错题必须重做；答对 +1 分
- * 榜单：本机 localStorage（无后端）
+ * 全班同榜：对接 Google Apps Script（可选）
  *************************************************/
+
+/** ✅ 把你部署 Apps Script 的 Web App URL 粘贴到这里（没配置就留空） */
+const REMOTE_LEADERBOARD_URL = ""; // 例如 "https://script.google.com/macros/s/XXXX/exec"
 
 // ====== 课本目录（你给的 8 单元 + 课文清单）======
 const CURRICULUM = {
@@ -19,180 +22,147 @@ const CURRICULUM = {
 
 const TOPICS = ["字词","句子","古诗","阅读"];
 
-// ====== 题库（已替换为：字词-第一单元-古诗二首）======
+// ====== 题库（拖拽题已改为选择题 + 新增阅读题）======
+// 说明：统一使用 type:"mcq"
 const QUESTION_BANK = [
-  // 选择题：读音
-  {
-    id: "ZC-U1-GS-001",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "mcq",
-    stem: "“妆”的正确读音是（ ）",
-    options: ["zhuāng","zuāng","zhāng","zuǎng"],
-    answerIndex: 0,
-    explain: "“妆”读 zhuāng。"
-  },
-  {
-    id: "ZC-U1-GS-002",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "mcq",
-    stem: "“裁”的正确读音是（ ）",
-    options: ["cái","chái","cāi","zǎi"],
-    answerIndex: 0,
-    explain: "“裁”读 cái。"
-  },
-  {
-    id: "ZC-U1-GS-003",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "mcq",
-    stem: "“莺”的正确读音是（ ）",
-    options: ["yīng","yīn","yíng","yìng"],
-    answerIndex: 0,
-    explain: "“莺”读 yīng。"
-  },
-  {
-    id: "ZC-U1-GS-004",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "mcq",
-    stem: "“拂”的正确读音是（ ）",
-    options: ["fú","fó","fǔ","fù"],
-    answerIndex: 0,
-    explain: "“拂”读 fú。"
-  },
-  {
-    id: "ZC-U1-GS-005",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "mcq",
-    stem: "“趁”的正确读音是（ ）",
-    options: ["chèn","chèng","chéng","chěn"],
-    answerIndex: 0,
-    explain: "“趁”读 chèn。"
-  },
+  /* =========================
+   * 字词 / 第一单元 / 古诗二首
+   *（你的原题：读音 + 选字填空 + 背诵句）
+   * 拖拽已改成选择题
+   ========================= */
 
-  // 单空选字（点选/拖拽）
-  {
-    id: "ZC-U1-GS-006",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "春天到了，我们一起读古（   ）。",
-    desc: "点一下选项，再点括号；也支持拖拽到括号。",
-    choices: ["诗","失"],
-    answer: "诗",
-    explain: "“古诗”。"
-  },
-  {
-    id: "ZC-U1-GS-007",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "（   ）年是最快乐的时光。",
-    desc: "从下面选一个填入括号。",
-    choices: ["童","同","铜"],
-    answer: "童",
-    explain: "“童年”。"
-  },
-  {
-    id: "ZC-U1-GS-008",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "小朋友们在草地上放风筝，欢声笑语像一首美丽的（   ）。",
-    choices: ["诗","失"],
-    answer: "诗",
-    explain: "“一首美丽的诗”。"
-  },
-  {
-    id: "ZC-U1-GS-009",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "二月春风似（   ）刀。",
-    choices: ["剪","前"],
-    answer: "剪",
-    explain: "“似剪刀”。"
-  },
-  {
-    id: "ZC-U1-GS-010",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "小明和我（   ）心协力完成任务。",
-    choices: ["童","同","铜"],
-    answer: "同",
-    explain: "“同心协力”。"
-  },
-  {
-    id: "ZC-U1-GS-011",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "他在吹（   ）号。",
-    choices: ["铜","童","同"],
-    answer: "铜",
-    explain: "“吹铜号”。"
-  },
-  {
-    id: "ZC-U1-GS-012",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "match_single",
-    stem: "春风像一把（   ）刀，裁出了嫩绿的柳叶。",
-    choices: ["剪","前"],
-    answer: "剪",
-    explain: "“一把剪刀”。"
-  },
+  // 读音
+  { id:"ZC-U1-GS-001", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“妆”的正确读音是（ ）",
+    options:["zhuāng","zuāng","zhāng","zuǎng"], answerIndex:0 },
 
-  // 整句填空
-  {
-    id: "ZC-U1-GS-013",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "fill",
-    stem: "不知细叶谁裁出，______________。",
-    desc: "提示：填写整句",
-    answers: ["二月春风似剪刀"],
-    explain: "原句：不知细叶谁裁出，二月春风似剪刀。"
-  },
+  { id:"ZC-U1-GS-002", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“裁”的正确读音是（ ）",
+    options:["cái","chái","cāi","zǎi"], answerIndex:0 },
 
-  // 两空填空
-  {
-    id: "ZC-U1-GS-014",
-    topic: "字词",
-    unit: "第一单元",
-    lesson: "古诗二首",
-    type: "fill_multi",
-    stem: "（ ）长莺飞二月天，拂堤杨柳醉（ ）。",
-    desc: "填写两个词语。",
-    blanks: [
-      { answers: ["草"] },
-      { answers: ["春烟"] }
+  { id:"ZC-U1-GS-003", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“莺”的正确读音是（ ）",
+    options:["yīng","yīn","yíng","yìng"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-004", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“拂”的正确读音是（ ）",
+    options:["fú","fó","fǔ","fù"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-005", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“趁”的正确读音是（ ）",
+    options:["chèn","chèng","chéng","chěn"], answerIndex:0 },
+
+  // 选字填空（原拖拽题→选择题）
+  { id:"ZC-U1-GS-006", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"春天到了，我们一起读古（ ）。",
+    options:["诗","失"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-007", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"（ ）年是最快乐的时光。",
+    options:["童","同","铜"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-008", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"小朋友们在草地上放风筝，欢声笑语像一首美丽的（ ）。",
+    options:["诗","失"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-009", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"二月春风似（ ）刀。",
+    options:["剪","前"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-010", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"小明和我（ ）心协力完成任务。",
+    options:["童","同","铜"], answerIndex:1 },
+
+  { id:"ZC-U1-GS-011", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"他在吹（ ）号。",
+    options:["铜","童","同"], answerIndex:0 },
+
+  { id:"ZC-U1-GS-012", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"春风像一把（ ）刀，裁出了嫩绿的柳叶。",
+    options:["剪","前"], answerIndex:0 },
+
+  // 背诵/填诗句（也用选择题做得更快：给出正确整句与干扰项）
+  { id:"ZC-U1-GS-013", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"不知细叶谁裁出，______________。",
+    options:[
+      "二月春风似剪刀",
+      "三月春风像剪刀",
+      "二月春风如小刀",
+      "二月春风剪细叶"
     ],
-    explain: "原句：草长莺飞二月天，拂堤杨柳醉春烟。"
-  }
+    answerIndex:0 },
+
+  { id:"ZC-U1-GS-014", topic:"字词", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"（ ）长莺飞二月天，拂堤杨柳醉（ ）。",
+    options:[
+      "草……春烟",
+      "花……春风",
+      "草……春风",
+      "花……春烟"
+    ],
+    answerIndex:0,
+    desc:"提示：选出正确的两处填词组合。"
+  },
+
+  /* =========================
+   * 阅读 / 第一单元 / 古诗二首
+   *（你提供的10题，含判断题）
+   ========================= */
+
+  { id:"YD-U1-GS-001", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"《咏柳》这首诗表达了诗人对( )的赞美之情。",
+    options:["柳树","杨树","松树","柏树"], answerIndex:0 },
+
+  { id:"YD-U1-GS-002", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"《村居》这首诗表达了诗人对( )的热爱之情。",
+    options:["夏天","秋天","春天","冬天"], answerIndex:2 },
+
+  { id:"YD-U1-GS-003", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"《咏柳》中把春风比作剪刀的诗句是( )",
+    options:[
+      "碧玉妆成一树高，万条垂下绿丝绦。",
+      "不知细叶谁裁出，二月春风似剪刀。"
+    ],
+    answerIndex:1 },
+
+  { id:"YD-U1-GS-004", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"《村居》中描绘孩子们放学后快乐情景的诗句是( )",
+    options:[
+      "草长莺飞二月天，拂堤杨柳醉春烟。",
+      "儿童散学归来早，忙趁东风放纸鸢。"
+    ],
+    answerIndex:1 },
+
+  { id:"YD-U1-GS-005", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“不知细叶谁裁出”中“裁”的意思是( )",
+    options:["裁剪","裁判","量体裁衣"], answerIndex:0 },
+
+  { id:"YD-U1-GS-006", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"“拂堤杨柳醉春烟”中“醉”的意思是( )",
+    options:["喝醉","陶醉","迷醉"], answerIndex:1 },
+
+  // 判断题：√ / X
+  { id:"YD-U1-GS-007", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"判断对错：《村居》和《咏柳》都是描写春天的古诗。( )",
+    options:["√","X"], answerIndex:0 },
+
+  { id:"YD-U1-GS-008", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"判断对错：“儿童散学归来早”中“散学”的意思是放学。( )",
+    options:["√","X"], answerIndex:0 },
+
+  { id:"YD-U1-GS-009", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"判断对错：“万条垂下绿丝绦”中“万条”指一万条柳枝。( )",
+    options:["√","X"], answerIndex:1 },
+
+  { id:"YD-U1-GS-010", topic:"阅读", unit:"第一单元", lesson:"古诗二首", type:"mcq",
+    stem:"判断对错：《咏柳》的作者是唐代诗人贺知章。( )",
+    options:["√","X"], answerIndex:0 }
 ];
 
-// ====== 存储键 ======
+// ====== 本机存储（兜底）======
 const LS = {
-  NAME: "ywxzy_name_v2",
-  DAILY: "ywxzy_daily_scores_v2" // { "YYYY-MM-DD": { "小明": 12 } }
+  NAME: "ywxzy_name_v3",
+  LOCAL_DAILY: "ywxzy_local_daily_scores_v3" // { "YYYY-MM-DD": { "小明": 12 } }
 };
 
 function todayKey() {
@@ -203,42 +173,73 @@ function todayKey() {
   return `${y}-${m}-${day}`;
 }
 
-function getDailyMap() {
+function getName() {
+  return (localStorage.getItem(LS.NAME) || "").trim();
+}
+function setName(name) {
+  localStorage.setItem(LS.NAME, name.trim());
+}
+
+// ====== 本机榜单（兜底）======
+function getLocalDailyMap() {
   try {
-    const raw = localStorage.getItem(LS.DAILY);
+    const raw = localStorage.getItem(LS.LOCAL_DAILY);
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
   }
 }
-
-function setDailyMap(obj) {
-  localStorage.setItem(LS.DAILY, JSON.stringify(obj));
+function setLocalDailyMap(obj) {
+  localStorage.setItem(LS.LOCAL_DAILY, JSON.stringify(obj));
 }
-
-function getName() {
-  return (localStorage.getItem(LS.NAME) || "").trim();
-}
-
-function setName(name) {
-  localStorage.setItem(LS.NAME, name.trim());
-}
-
-function getTodayScoreFor(name) {
+function getLocalTodayScoreFor(name) {
   if (!name) return 0;
-  const map = getDailyMap();
+  const map = getLocalDailyMap();
   const t = todayKey();
   return (map[t] && map[t][name]) ? map[t][name] : 0;
 }
-
-function addTodayScore(name, delta) {
+function addLocalTodayScore(name, delta) {
   if (!name) return;
-  const map = getDailyMap();
+  const map = getLocalDailyMap();
   const t = todayKey();
   if (!map[t]) map[t] = {};
   if (!map[t][name]) map[t][name] = 0;
   map[t][name] += delta;
-  setDailyMap(map);
+  setLocalDailyMap(map);
+}
+
+// ====== 远程榜单（全班同榜）======
+function hasRemote() {
+  return typeof REMOTE_LEADERBOARD_URL === "string" && REMOTE_LEADERBOARD_URL.trim().length > 0;
+}
+
+/** 提交一次加分（delta=1） */
+async function remoteAddScore(name, delta) {
+  if (!hasRemote()) return { ok:false, skipped:true };
+  try {
+    const res = await fetch(REMOTE_LEADERBOARD_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" }, // Apps Script 兼容
+      body: JSON.stringify({ date: todayKey(), name, delta })
+    });
+    const data = await res.json().catch(() => ({ ok:false }));
+    return data;
+  } catch (e) {
+    return { ok:false, error: String(e) };
+  }
+}
+
+/** 拉取今日榜单 */
+async function remoteGetBoard() {
+  if (!hasRemote()) return { ok:false, entries:[], skipped:true };
+  try {
+    const url = `${REMOTE_LEADERBOARD_URL}?date=${encodeURIComponent(todayKey())}`;
+    const res = await fetch(url, { method: "GET" });
+    const data = await res.json().catch(() => ({ ok:false, entries:[] }));
+    return data;
+  } catch (e) {
+    return { ok:false, entries:[], error:String(e) };
+  }
 }
 
 // ====== DOM ======
@@ -292,12 +293,13 @@ const btnQuitToLesson = $("#btnQuitToLesson");
 const boardList = $("#boardList");
 const champText = $("#champText");
 const champSub = $("#champSub");
-const btnClearBoard = $("#btnClearBoard");
+const boardStatus = $("#boardStatus");
+const btnRefreshBoard = $("#btnRefreshBoard");
+const btnClearLocal = $("#btnClearLocal");
 
 const flowerBtns = $$(".flower");
 
 // ====== 状态 ======
-let currentView = "home";
 let selectedTopic = null;
 let selectedUnit = null;
 let selectedLesson = null;
@@ -307,11 +309,7 @@ let i = 0;
 let roundScore = 0;
 let unlockedNext = false;
 
-// match_single 辅助：移动端点选
-let chosenChipValue = null;
-
 function showView(view) {
-  currentView = view;
   Object.keys(views).forEach(k => views[k].classList.toggle("hidden", k !== view));
   navBtns.forEach(b => b.classList.toggle("active", b.dataset.view === view));
 
@@ -323,7 +321,8 @@ function refreshHome() {
   const nm = getName();
   nameText.textContent = nm || "未填写";
   studentNameInput.value = nm;
-  todayScoreText.textContent = String(getTodayScoreFor(nm));
+  // 首页展示：如果远程不可用，就展示本机积分；远程可用时也先用本机显示（避免卡顿）
+  todayScoreText.textContent = String(getLocalTodayScoreFor(nm));
 }
 
 function ensureNameOrToast() {
@@ -395,19 +394,14 @@ function renderLessonGrid() {
     const count = countQuestions(selectedTopic, selectedUnit, lessonName);
     const sub = count > 0 ? `题目数量：${count} 题` : "暂无题库（可继续补充）";
 
-    card.innerHTML = `
-      <div class="t">${lessonName}</div>
-      <div class="s">${sub}</div>
-    `;
+    card.innerHTML = `<div class="t">${lessonName}</div><div class="s">${sub}</div>`;
     card.addEventListener("click", () => startLesson(lessonName));
     lessonGrid.appendChild(card);
   });
 }
 
 function countQuestions(topic, unit, lesson) {
-  return QUESTION_BANK.filter(q =>
-    q.topic === topic && q.unit === unit && q.lesson === lesson
-  ).length;
+  return QUESTION_BANK.filter(q => q.topic === topic && q.unit === unit && q.lesson === lesson).length;
 }
 
 // ====== 课文 → 闯关 ======
@@ -428,20 +422,18 @@ function startLesson(lessonName) {
     return;
   }
 
-  // 乱序
   list = shuffle([...list]);
   i = 0;
   roundScore = 0;
   unlockedNext = false;
 
-  // 顶部信息
   topicBadge.textContent = `板块：${selectedTopic}`;
   unitBadge.textContent = `单元：${selectedUnit}`;
   lessonBadge.textContent = `课文：${selectedLesson}`;
   playerNameInGame.textContent = nm;
 
   roundScoreEl.textContent = "0";
-  dayScoreEl.textContent = String(getTodayScoreFor(nm));
+  dayScoreEl.textContent = String(getLocalTodayScoreFor(nm));
 
   showView("game");
   renderQuestion();
@@ -450,7 +442,6 @@ function startLesson(lessonName) {
 function renderQuestion() {
   unlockedNext = false;
   btnNext.disabled = true;
-  chosenChipValue = null;
 
   const q = list[i];
   const total = list.length;
@@ -465,34 +456,38 @@ function renderQuestion() {
   feedback.textContent = "";
 
   qBody.innerHTML = "";
-
-  if (q.type === "mcq") renderMCQ(q);
-  else if (q.type === "match_single") renderMatchSingle(q);
-  else if (q.type === "fill") renderFill(q);
-  else if (q.type === "fill_multi") renderFillMulti(q);
-  else {
-    qBody.innerHTML = `<div class="muted">未知题型：${q.type}</div>`;
-  }
+  renderMCQ(q);
 }
 
-function passQuestion(withExplain) {
+async function passQuestion() {
   const nm = getName();
   roundScore += 1;
   roundScoreEl.textContent = String(roundScore);
 
-  addTodayScore(nm, 1);
-  dayScoreEl.textContent = String(getTodayScoreFor(nm));
+  // 本机兜底先加分（UI 立刻反馈）
+  addLocalTodayScore(nm, 1);
+  dayScoreEl.textContent = String(getLocalTodayScoreFor(nm));
+  todayScoreText.textContent = String(getLocalTodayScoreFor(nm));
+
+  // 远程（全班同榜）异步提交
+  const r = await remoteAddScore(nm, 1);
+  // 不影响答题，只在反馈里提示状态
+  if (hasRemote() && (!r || r.ok !== true)) {
+    // 不阻塞：只轻提示
+    feedback.className = "feedback ok";
+    feedback.textContent = `✅ 答对啦！+1 分（已加到本机；远程榜单提交可能失败，可稍后刷新榜单）`;
+  } else {
+    feedback.className = "feedback ok";
+    feedback.textContent = `✅ 答对啦！+1 分`;
+  }
 
   unlockedNext = true;
   btnNext.disabled = false;
-
-  feedback.className = "feedback ok";
-  feedback.textContent = `✅ 答对啦！+1 分${withExplain ? " 解析：" + withExplain : ""}`;
 }
 
-function failAndRetry(msg, explain) {
+function failAndRetry(msg) {
   feedback.className = "feedback bad";
-  feedback.textContent = `❌ ${msg}（要重做直到正确）${explain ? " 解析：" + explain : ""}`;
+  feedback.textContent = `❌ ${msg}（要重做直到正确）`;
   unlockedNext = false;
   btnNext.disabled = true;
 }
@@ -517,7 +512,7 @@ function nextQuestion() {
   btnNext.disabled = true;
 }
 
-// ====== 题型渲染 ======
+// ====== 题型：选择题 ======
 function renderMCQ(q) {
   const grid = document.createElement("div");
   grid.className = "mcqGrid";
@@ -526,231 +521,78 @@ function renderMCQ(q) {
     const btn = document.createElement("button");
     btn.className = "opt";
     btn.textContent = `${String.fromCharCode(65 + idx)}. ${opt}`;
-    btn.addEventListener("click", () => {
+
+    btn.addEventListener("click", async () => {
       const correct = idx === q.answerIndex;
       if (correct) {
         btn.classList.add("good");
         [...grid.querySelectorAll("button")].forEach(b => b.disabled = true);
-        passQuestion(q.explain);
+        await passQuestion();
       } else {
         btn.classList.add("bad");
-        failAndRetry("再想一想～", q.explain || "");
+        failAndRetry("再想一想～");
       }
     });
+
     grid.appendChild(btn);
   });
 
   qBody.appendChild(grid);
 }
 
-function renderMatchSingle(q) {
-  const wrap = document.createElement("div");
-  wrap.className = "matchOneWrap";
+// ====== 榜单渲染 ======
+async function renderBoard() {
+  boardList.innerHTML = "";
+  champText.textContent = "—";
+  champSub.textContent = "—";
 
-  const desc = document.createElement("div");
-  desc.className = "muted tiny";
-  desc.textContent = q.desc || "点选或拖拽把正确的字填入括号。";
-  wrap.appendChild(desc);
+  if (hasRemote()) {
+    boardStatus.textContent = "正在加载：全班同榜（远程）…";
+    const data = await remoteGetBoard();
 
-  // 句子显示 + 空格放置区
-  const zone = document.createElement("div");
-  zone.className = "blankZone";
-  zone.innerHTML = `
-    <div>
-      <div class="muted tiny">题目：</div>
-      <div class="blankText">${q.stem}</div>
-    </div>
-    <div style="text-align:right">
-      <div class="muted tiny">括号里放这里</div>
-      <div class="blankHint" id="blankHint">（点选后再点这里 / 或拖拽到这里）</div>
-    </div>
-  `;
+    if (data && data.ok && Array.isArray(data.entries)) {
+      const entries = data.entries;
+      boardStatus.textContent = `全班同榜：${todayKey()}（远程）`;
 
-  // 让右侧成为可放置区域
-  const blankHint = zone.querySelector("#blankHint");
-  blankHint.dataset.value = "";
+      if (entries.length === 0) {
+        boardList.innerHTML = `<div class="muted">今天还没有人上榜～</div>`;
+        return;
+      }
 
-  // 拖拽支持（桌面）
-  blankHint.addEventListener("dragover", (e) => e.preventDefault());
-  blankHint.addEventListener("drop", (e) => {
-    e.preventDefault();
-    const val = e.dataTransfer.getData("text/plain");
-    if (!val) return;
-    placeMatchSingle(val);
-  });
+      const top = entries[0];
+      champText.textContent = top.name;
+      champSub.textContent = `今日积分：${top.score} 分`;
 
-  // 点选支持（平板/手机）
-  blankHint.style.cursor = "pointer";
-  blankHint.addEventListener("click", () => {
-    if (!chosenChipValue) {
-      failAndRetry("先点一下下面的选项哦～", q.explain || "");
+      entries.forEach((e, idx) => {
+        const div = document.createElement("div");
+        div.className = "boardCard";
+        div.style.borderRadius = "14px";
+        div.style.padding = "10px 12px";
+        div.innerHTML = `<strong>#${idx+1}</strong>　${e.name}　<span class="muted">·</span>　<strong>${e.score}</strong> 分`;
+        boardList.appendChild(div);
+      });
       return;
     }
-    placeMatchSingle(chosenChipValue);
-  });
 
-  wrap.appendChild(zone);
-
-  // 选项 chips
-  const row = document.createElement("div");
-  row.className = "choiceRow";
-
-  q.choices.forEach((ch) => {
-    const chip = document.createElement("div");
-    chip.className = "chip draggable";
-    chip.textContent = ch;
-    chip.draggable = true;
-    chip.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/plain", ch);
-    });
-    chip.addEventListener("click", () => {
-      chosenChipValue = ch;
-      [...row.querySelectorAll(".chip")].forEach(x => x.classList.remove("selected"));
-      chip.classList.add("selected");
-    });
-    row.appendChild(chip);
-  });
-
-  wrap.appendChild(row);
-
-  // 放置判断
-  function placeMatchSingle(val) {
-    blankHint.textContent = `已填：${val}（点击可改）`;
-    blankHint.dataset.value = val;
-
-    if (normalizeText(val) === normalizeText(q.answer)) {
-      // 答对：锁定
-      [...row.querySelectorAll(".chip")].forEach(c => {
-        c.style.opacity = "0.7";
-        c.style.pointerEvents = "none";
-        c.draggable = false;
-      });
-      blankHint.style.pointerEvents = "none";
-      passQuestion(q.explain);
-    } else {
-      failAndRetry("这个字不对，再换一个～", q.explain || "");
-      // 允许继续改
-    }
+    boardStatus.textContent = "远程榜单加载失败，已改用本机榜单（请检查教师设置 URL）";
+    // fallthrough to local
   }
 
-  qBody.appendChild(wrap);
-}
-
-function renderFill(q) {
-  const wrap = document.createElement("div");
-
-  const p = document.createElement("div");
-  p.className = "blockQuote";
-  p.textContent = q.stem;
-  wrap.appendChild(p);
-
-  const row = document.createElement("div");
-  row.className = "fillRow";
-
-  const input = document.createElement("input");
-  input.className = "fillInput";
-  input.placeholder = "请输入答案（整句/词语）";
-
-  const btn = document.createElement("button");
-  btn.className = "btn primary";
-  btn.textContent = "提交";
-
-  btn.addEventListener("click", () => {
-    const val = (input.value || "").trim();
-    if (!val) {
-      failAndRetry("还没输入哦～", q.explain || "");
-      return;
-    }
-    const answers = q.answers || [];
-    const ok = answers.some(a => normalizeText(val) === normalizeText(a));
-    if (ok) {
-      input.disabled = true;
-      btn.disabled = true;
-      passQuestion(q.explain);
-    } else {
-      failAndRetry("不对，再试一次～", q.explain || "");
-      input.focus();
-      input.select();
-    }
-  });
-
-  row.appendChild(input);
-  row.appendChild(btn);
-  wrap.appendChild(row);
-
-  qBody.appendChild(wrap);
-}
-
-function renderFillMulti(q) {
-  const wrap = document.createElement("div");
-
-  const p = document.createElement("div");
-  p.className = "blockQuote";
-  p.textContent = q.stem;
-  wrap.appendChild(p);
-
-  const row = document.createElement("div");
-  row.className = "fillRow";
-
-  const inputs = [];
-  (q.blanks || []).forEach((b, idx) => {
-    const input = document.createElement("input");
-    input.className = "fillInput";
-    input.placeholder = `第${idx + 1}空`;
-    inputs.push(input);
-    row.appendChild(input);
-  });
-
-  const btn = document.createElement("button");
-  btn.className = "btn primary";
-  btn.textContent = "提交";
-  row.appendChild(btn);
-
-  btn.addEventListener("click", () => {
-    const vals = inputs.map(x => (x.value || "").trim());
-    if (!vals.every(v => v.length > 0)) {
-      failAndRetry("还有空没填完哦～", q.explain || "");
-      return;
-    }
-
-    const ok = vals.every((v, idx) => {
-      const answers = (q.blanks[idx] && q.blanks[idx].answers) ? q.blanks[idx].answers : [];
-      return answers.some(a => normalizeText(v) === normalizeText(a));
-    });
-
-    if (ok) {
-      inputs.forEach(x => x.disabled = true);
-      btn.disabled = true;
-      passQuestion(q.explain);
-    } else {
-      failAndRetry("有空填错了，再检查一下～", q.explain || "");
-      inputs[0].focus();
-      inputs[0].select();
-    }
-  });
-
-  wrap.appendChild(row);
-  qBody.appendChild(wrap);
-}
-
-// ====== 榜单（本机）======
-function renderBoard() {
-  const map = getDailyMap();
+  // 本机榜单兜底
+  boardStatus.textContent = `本机榜单：${todayKey()}（未配置远程或远程失败）`;
+  const map = getLocalDailyMap();
   const t = todayKey();
   const today = map[t] || {};
   const entries = Object.entries(today).sort((a,b) => b[1] - a[1]);
 
-  boardList.innerHTML = "";
   if (!entries.length) {
     boardList.innerHTML = `<div class="muted">本机今天还没有记录～</div>`;
-    champText.textContent = "—";
-    champSub.textContent = "—";
     return;
   }
 
   const [topName, topScore] = entries[0];
-  champText.textContent = `${topName}`;
-  champSub.textContent = `今日积分：${topScore} 分（日期：${t}）`;
+  champText.textContent = topName;
+  champSub.textContent = `今日积分：${topScore} 分`;
 
   entries.forEach(([n, s], idx) => {
     const div = document.createElement("div");
@@ -762,9 +604,9 @@ function renderBoard() {
   });
 }
 
-function clearBoard() {
-  if (!confirm("确定清空本机榜单吗？（只影响这台设备）")) return;
-  setDailyMap({});
+function clearLocal() {
+  if (!confirm("确定清空本机榜单吗？（不影响远程全班榜）")) return;
+  setLocalDailyMap({});
   renderBoard();
   refreshHome();
 }
@@ -776,10 +618,6 @@ function shuffle(arr) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-function normalizeText(s) {
-  return (s || "").replace(/\s+/g, "");
 }
 
 // ====== 事件绑定 ======
@@ -796,10 +634,7 @@ btnSaveName.addEventListener("click", () => {
   alert(`已保存姓名：${name}。现在可以选择板块开始闯关啦！`);
 });
 
-flowerBtns.forEach(btn => btn.addEventListener("click", () => {
-  const topic = btn.dataset.topic;
-  openUnits(topic);
-}));
+flowerBtns.forEach(btn => btn.addEventListener("click", () => openUnits(btn.dataset.topic)));
 
 btnBackHome1.addEventListener("click", () => showView("home"));
 btnBackHome2.addEventListener("click", () => showView("home"));
@@ -808,7 +643,8 @@ btnBackUnit.addEventListener("click", () => openUnits(selectedTopic));
 btnQuitToLesson.addEventListener("click", () => openLessons(selectedUnit));
 btnNext.addEventListener("click", nextQuestion);
 
-btnClearBoard.addEventListener("click", clearBoard);
+btnRefreshBoard.addEventListener("click", renderBoard);
+btnClearLocal.addEventListener("click", clearLocal);
 
 // ====== 启动 ======
 refreshHome();
