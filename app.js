@@ -540,3 +540,4 @@ btnClearLocal.addEventListener("click", clearLocal);
 // ====== 启动 ======
 refreshHome();
 showView("home");
+
