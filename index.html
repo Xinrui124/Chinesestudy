@@ -12,14 +12,14 @@
       <div class="mark">语</div>
       <div class="brandText">
         <h1>我是语文小状元</h1>
-        <p class="sub">二年级 · 闯关练习 · 即时反馈 · 积分榜</p>
+        <p class="sub">二年级 · 闯关练习 · 即时反馈 · 全班同榜</p>
       </div>
     </div>
 
     <nav class="nav">
       <button class="navBtn active" data-view="home">首页</button>
       <button class="navBtn" data-view="board">今日榜单</button>
-      <button class="navBtn" data-view="teacher">题库格式</button>
+      <button class="navBtn" data-view="teacher">教师设置</button>
     </nav>
   </header>
 
@@ -41,6 +41,10 @@
             <div class="pill">当前姓名：<strong id="nameText">未填写</strong></div>
             <div class="pill">今日积分：<strong id="todayScoreText">0</strong></div>
           </div>
+
+          <div class="muted tiny">
+            全班同榜说明：需要教师先在“教师设置”里配置一个 Google 表格接口（5分钟搞定）。
+          </div>
         </div>
 
         <div class="heroRight">
@@ -60,12 +64,11 @@
       <div class="card">
         <div class="row space">
           <div>
-            <h2 id="unitTitle">选择单元</h2>
+            <h2>选择单元</h2>
             <p class="muted">板块：<strong id="unitTopicText">—</strong>　|　姓名：<strong id="unitNameText">—</strong></p>
           </div>
           <button class="btn" id="btnBackHome1">返回首页</button>
         </div>
-
         <div class="unitGrid" id="unitGrid"></div>
       </div>
     </section>
@@ -75,7 +78,7 @@
       <div class="card">
         <div class="row space">
           <div>
-            <h2 id="lessonTitle">选择课文</h2>
+            <h2>选择课文</h2>
             <p class="muted">板块：<strong id="lessonTopicText">—</strong>　|　单元：<strong id="lessonUnitText">—</strong>　|　姓名：<strong id="lessonNameText">—</strong></p>
           </div>
           <div class="row gap">
@@ -85,9 +88,8 @@
         </div>
 
         <div class="lessonGrid" id="lessonGrid"></div>
-
         <div class="muted tiny">
-          说明：如果某课文暂时没有题库，点击会提示“暂无题库”，你把题发我我就能继续整理进去。
+          说明：若课文显示“暂无题库”，你把题库发我即可继续补充。
         </div>
       </div>
     </section>
@@ -124,13 +126,11 @@
 
           <div class="row space actions">
             <button class="btn" id="btnQuitToLesson">返回课文</button>
-            <div class="row gap">
-              <button class="btn primary" id="btnNext" disabled>下一题</button>
-            </div>
+            <button class="btn primary" id="btnNext" disabled>下一题</button>
           </div>
 
           <div class="muted tiny">
-            规则：做错必须重做；答对才解锁“下一题”。积分会记入“今日榜单（本机）”。
+            规则：做错必须重做；答对才解锁“下一题”。答对会自动提交到“全班同榜”（若已配置）。
           </div>
         </div>
       </div>
@@ -142,14 +142,19 @@
         <div class="row space">
           <div>
             <h2>今日榜单 🏆</h2>
-            <p class="muted">仅记录在本机浏览器（GitHub Pages 无后端）。要“全班同榜”，我可以后面帮你接入表单/数据库。</p>
+            <p class="muted">
+              若教师已配置 Google 表格接口：这里显示“全班同榜”。否则退化为“本机榜单”。
+            </p>
           </div>
-          <button class="btn" id="btnClearBoard">清空本机榜单</button>
+          <div class="row gap">
+            <button class="btn" id="btnRefreshBoard">刷新榜单</button>
+            <button class="btn" id="btnClearLocal">清空本机榜单</button>
+          </div>
         </div>
 
         <div class="boardGrid">
           <div class="boardCard">
-            <div class="boardTitle">今天（本机）语文小状元</div>
+            <div class="boardTitle">今天语文小状元</div>
             <div class="champ" id="champText">—</div>
             <div class="muted tiny" id="champSub">—</div>
           </div>
@@ -159,71 +164,96 @@
             <div id="boardList" class="boardList"></div>
           </div>
         </div>
+
+        <div class="muted tiny" id="boardStatus">—</div>
       </div>
     </section>
 
-    <!-- 题库格式 -->
+    <!-- 教师设置 -->
     <section id="view-teacher" class="view hidden">
       <div class="card">
-        <h2>题库格式（你发我题库，我就按这个整理进代码）</h2>
-        <p class="muted">题库在 <code>app.js</code> 的 <code>QUESTION_BANK</code>。现在支持：选择题、单空选字（点选/拖拽）、填空（整句/多空）。</p>
+        <h2>教师设置：开启“全班同榜”（推荐：Google 表格，5分钟）</h2>
 
-        <pre class="codeBlock"><code>// 选择题（mcq）
-{
-  id: "ZC-U1-001",
-  topic: "字词",
-  unit: "第一单元",
-  lesson: "古诗二首",
-  type: "mcq",
-  stem: "“妆”的正确读音是（ ）",
-  options: ["zhuāng","zuāng","zhāng","zuǎng"],
-  answerIndex: 0,
-  explain: "可选：解析"
+        <ol class="help">
+          <li>打开 Google Drive → 新建一个表格（例如：<strong>语文小状元积分</strong>）。</li>
+          <li>表格里随便留空即可，数据会自动写入。</li>
+          <li>在表格里：扩展程序 → Apps Script，创建脚本，粘贴下方代码。</li>
+          <li>部署 → 新建部署 → 类型选择“Web 应用”：
+            <ul>
+              <li>执行身份：我（脚本所有者）</li>
+              <li>访问权限：任何人</li>
+            </ul>
+            得到一个 <strong>Web App URL</strong>。
+          </li>
+          <li>把 URL 粘贴到 <code>app.js</code> 里 <code>REMOTE_LEADERBOARD_URL</code> 变量即可。</li>
+        </ol>
+
+        <h3>Apps Script 代码（复制粘贴即可）</h3>
+        <pre class="codeBlock"><code>function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("scores") || ss.insertSheet("scores");
+  var data = JSON.parse(e.postData.contents || "{}");
+
+  // data: { date:"YYYY-MM-DD", name:"小明", delta:1 }
+  var date = data.date || "";
+  var name = data.name || "";
+  var delta = Number(data.delta || 0);
+
+  if (!date || !name || !delta) {
+    return ContentService.createTextOutput(JSON.stringify({ ok:false, error:"bad params" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // 表头
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["date", "name", "score"]);
+  }
+
+  // 查找同一天同名
+  var values = sheet.getDataRange().getValues();
+  var row = -1;
+  for (var i = 1; i < values.length; i++) {
+    if (values[i][0] === date && values[i][1] === name) {
+      row = i + 1; // 1-based
+      break;
+    }
+  }
+
+  if (row === -1) {
+    sheet.appendRow([date, name, delta]);
+  } else {
+    var current = Number(sheet.getRange(row, 3).getValue() || 0);
+    sheet.getRange(row, 3).setValue(current + delta);
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ ok:true }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-// 单空选字（match_single）：给若干字，选对一个填进括号
-{
-  id: "ZC-U1-006",
-  topic: "字词",
-  unit: "第一单元",
-  lesson: "古诗二首",
-  type: "match_single",
-  stem: "春天到了，我们一起读古（   ）。",
-  desc: "点一下选项，再点括号；也支持拖拽。",
-  choices: ["诗","失"],
-  answer: "诗"
-}
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("scores");
+  var date = (e.parameter && e.parameter.date) ? e.parameter.date : "";
 
-// 填空（fill）：整句/一个答案
-{
-  id: "ZC-U1-009",
-  topic: "字词",
-  unit: "第一单元",
-  lesson: "古诗二首",
-  type: "fill",
-  stem: "不知细叶谁裁出，______________。",
-  answers: ["二月春风似剪刀"]
-}
+  if (!sheet || !date) {
+    return ContentService.createTextOutput(JSON.stringify({ ok:false, entries:[] }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 
-// 多空填空（fill_multi）
-{
-  id: "ZC-U1-010",
-  topic: "字词",
-  unit: "第一单元",
-  lesson: "古诗二首",
-  type: "fill_multi",
-  stem: "（ ）长莺飞二月天，拂堤杨柳醉（ ）。",
-  blanks: [
-    { answers: ["草"] },
-    { answers: ["春烟"] }
-  ]
-}
-</code></pre>
+  var values = sheet.getDataRange().getValues();
+  var entries = [];
+  for (var i = 1; i < values.length; i++) {
+    if (values[i][0] === date) {
+      entries.push({ name: values[i][1], score: Number(values[i][2] || 0) });
+    }
+  }
+  entries.sort(function(a,b){ return b.score - a.score; });
+  return ContentService.createTextOutput(JSON.stringify({ ok:true, entries:entries }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</code></pre>
 
-        <p class="muted">
-          你给我题库时最省事的格式是：<br/>
-          <strong>板块 / 单元 / 课文</strong> 然后逐题写：题干、选项（如有）、答案、解析（可选）。<br/>
-          我会帮你做编号、整理成可直接粘贴的 QUESTION_BANK。
+        <p class="muted tiny">
+          配置好后，全班同学在不同设备上答题，榜单会自动汇总到同一个 Google 表格里。
         </p>
       </div>
     </section>
