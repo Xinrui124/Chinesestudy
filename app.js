@@ -5,8 +5,8 @@
  * 全班同榜：对接 Google Apps Script（可选）
  *************************************************/
 
-/** ✅ 把你部署 Apps Script 的 Web App URL 粘贴到这里（没配置就留空） */
-const REMOTE_LEADERBOARD_URL = ""; // 例如 "https://script.google.com/macros/s/XXXX/exec"
+/** ✅ 把你部署 Apps Script 的 Web App URL 粘贴到这里（https://script.google.com/macros/s/AKfycbzAbU2XhV4zJE6bTSzHexs3_pXuZEkPs4RjOQ0QHXpaCOzufbzbdOGoTzx5wFINU_MByg/exec） */
+const REMOTE_LEADERBOARD_URL = ""; // 例如 "https://script.google.com/macros/s/AKfycbzAbU2XhV4zJE6bTSzHexs3_pXuZEkPs4RjOQ0QHXpaCOzufbzbdOGoTzx5wFINU_MByg/exec"
 
 // ====== 课本目录（你给的 8 单元 + 课文清单）======
 const CURRICULUM = {
@@ -649,3 +649,4 @@ btnClearLocal.addEventListener("click", clearLocal);
 // ====== 启动 ======
 refreshHome();
 showView("home");
+
