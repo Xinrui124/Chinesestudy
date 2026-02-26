@@ -19,6 +19,7 @@
     <nav class="nav">
       <button class="navBtn active" data-view="home">首页</button>
       <button class="navBtn" data-view="board">今日榜单</button>
+      <button class="navBtn" data-view="teacher">教师设置</button>
     </nav>
   </header>
 
@@ -39,6 +40,10 @@
           <div class="miniStats">
             <div class="pill">当前姓名：<strong id="nameText">未填写</strong></div>
             <div class="pill">今日积分：<strong id="todayScoreText">0</strong></div>
+          </div>
+
+          <div class="muted tiny">
+            ✅ 已开启“全班同榜”：答对会自动提交到班级榜单；榜单页可刷新查看。
           </div>
         </div>
 
@@ -74,9 +79,7 @@
         <div class="row space">
           <div>
             <h2>选择课文</h2>
-            <p class="muted">
-              板块：<strong id="lessonTopicText">—</strong>　|　单元：<strong id="lessonUnitText">—</strong>　|　姓名：<strong id="lessonNameText">—</strong>
-            </p>
+            <p class="muted">板块：<strong id="lessonTopicText">—</strong>　|　单元：<strong id="lessonUnitText">—</strong>　|　姓名：<strong id="lessonNameText">—</strong></p>
           </div>
           <div class="row gap">
             <button class="btn" id="btnBackUnit">返回单元</button>
@@ -85,9 +88,8 @@
         </div>
 
         <div class="lessonGrid" id="lessonGrid"></div>
-
         <div class="muted tiny">
-          说明：若课文显示“暂无题库”，把题库发我即可继续补充。
+          说明：若课文显示“暂无题库”，你把题库发我即可继续补充。
         </div>
       </div>
     </section>
@@ -128,7 +130,7 @@
           </div>
 
           <div class="muted tiny">
-            规则：做错必须重做；答对才解锁“下一题”。答对自动记入“今日榜单（全班同榜）”。
+            规则：做错必须重做；答对才解锁“下一题”。答对会自动提交到“全班同榜”。
           </div>
         </div>
       </div>
@@ -140,27 +142,19 @@
         <div class="row space">
           <div>
             <h2>今日榜单 🏆</h2>
-            <p class="muted">前三名领奖台 + 金色小皇冠。点击“刷新榜单”即可更新全班排名。</p>
+            <p class="muted">这里显示“全班同榜”（来自你的 Google 表格）。</p>
           </div>
           <div class="row gap">
             <button class="btn" id="btnRefreshBoard">刷新榜单</button>
+            <button class="btn" id="btnClearLocal">清空本机榜单</button>
           </div>
         </div>
 
-        <!-- 领奖台 -->
-        <div class="podiumWrap">
-          <div class="podiumGrid" id="podiumGrid">
-            <!-- JS 填充 -->
-          </div>
-        </div>
-
-        <!-- 完整榜单 -->
         <div class="boardGrid">
           <div class="boardCard">
-            <div class="boardTitle">语文小状元</div>
+            <div class="boardTitle">今天语文小状元</div>
             <div class="champ" id="champText">—</div>
             <div class="muted tiny" id="champSub">—</div>
-            <div class="muted tiny" id="boardStatus">—</div>
           </div>
 
           <div class="boardCard">
@@ -168,12 +162,23 @@
             <div id="boardList" class="boardList"></div>
           </div>
         </div>
+
+        <div class="muted tiny" id="boardStatus">—</div>
       </div>
     </section>
+
+    <!-- 教师设置（保留展示，方便以后换链接） -->
+    <section id="view-teacher" class="view hidden">
+      <div class="card">
+        <h2>教师设置</h2>
+        <p class="muted">你已经配置好了全班同榜（Google Apps Script）。如果以后换链接，只需要修改 <code>app.js</code> 里的 <code>REMOTE_LEADERBOARD_URL</code>。</p>
+        <pre class="codeBlock"><code>REMOTE_LEADERBOARD_URL = "https://script.google.com/macros/s/你的ID/exec"</code></pre>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="footer muted">© 我是语文小状元 · 二年级语文闯关 · design by XINRUI</footer>
+  <footer class="footer muted">© 我是语文小状元 · 二年级语文闯关</footer>
   <script src="./app.js"></script>
 </body>
 </html>
-
